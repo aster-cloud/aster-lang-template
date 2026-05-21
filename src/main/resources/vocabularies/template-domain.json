@@ -1,0 +1,25 @@
+{
+  "id": "template.domain",
+  "name": "Template Domain Vocabulary",
+  "locale": "template-XX-XX",
+  "version": "0.1.0",
+  "metadata": {
+    "author": "TODO[CONTRIBUTOR]: 你的姓名/团队",
+    "createdAt": "2026-01-01",
+    "description": "TODO[CONTRIBUTOR]: 替换为你的领域词汇表说明，例：'Auto insurance vocabulary for ja-JP'"
+  },
+  "structs": [
+    {
+      "canonical": "Driver",
+      "localized": "TODO_TRANSLATE_Driver",
+      "aliases": []
+    }
+  ],
+  "fields": [
+    {
+      "canonical": "age",
+      "localized": "TODO_TRANSLATE_age",
+      "parent": "Driver"
+    }
+  ]
+}

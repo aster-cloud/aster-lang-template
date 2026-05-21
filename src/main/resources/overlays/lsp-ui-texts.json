@@ -1,0 +1,6 @@
+{
+  "_comment": "TODO[CONTRIBUTOR]: optional LSP UI translation. Empty file is acceptable for MVP.",
+  "completionItems": {},
+  "hoverHints": {},
+  "diagnosticLabels": {}
+}
