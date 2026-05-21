@@ -1,0 +1,12 @@
+#  Default owners for the lexicon template — review fork PRs that add
+#  new locales or update the canonical scaffold.
+
+*                       @aster-cloud/lang-maintainers
+
+# SPI surface — changes here ripple into every locale repo
+/src/main/java/         @aster-cloud/lang-maintainers
+/src/main/resources/META-INF/services/   @aster-cloud/lang-maintainers
+
+# Build / CI
+/build.gradle.kts                @aster-cloud/lang-maintainers
+/.github/workflows/              @aster-cloud/lang-maintainers

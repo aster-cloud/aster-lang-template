@@ -1,0 +1,57 @@
+name: New lexicon request
+description: Propose a new locale before forking the template
+title: "[lexicon] Add support for <locale id>"
+labels: ["lexicon-request"]
+body:
+  - type: input
+    id: locale-id
+    attributes:
+      label: Target locale id (BCP-47)
+      description: e.g. ja-JP, fr-CA, ar-EG
+      placeholder: ja-JP
+    validations:
+      required: true
+
+  - type: input
+    id: display-name
+    attributes:
+      label: Display name
+      description: How the locale appears to end users
+      placeholder: 日本語
+    validations:
+      required: true
+
+  - type: dropdown
+    id: direction
+    attributes:
+      label: Text direction
+      options:
+        - ltr (left-to-right)
+        - rtl (right-to-left)
+    validations:
+      required: true
+
+  - type: textarea
+    id: contributor-context
+    attributes:
+      label: Contributor context
+      description: Who will translate? Linguistic background? Native-speaker reviewer?
+    validations:
+      required: true
+
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Rough timeline
+      description: When do you expect the first PR? Any blockers (vocabulary, RTL support, etc.)?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: prereqs
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have read CONTRIBUTING.md
+        - label: I have a native-speaker reviewer lined up (separate from the translator)
+        - label: I will use `gh repo fork --template` against this repository, not a bare clone
