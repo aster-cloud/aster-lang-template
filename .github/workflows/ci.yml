@@ -10,12 +10,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
+      # aster-lang-core is not (yet) published to a public Maven repo.
+      # Lang-pack repos (en/zh/de) and this template fork resolve it from
+      # ~/.m2 after `publishToMavenLocal`. Mirror the same pattern as
+      # aster-lang-en/.github/workflows/ci.yml: side-checkout core,
+      # publish locally, then build.
+      #
+      # External contributors forking this template will need either
+      # CROSS_REPO_TOKEN (if the core repo is private) or to point this
+      # at a public Maven Central coordinate once aster-lang-core lands
+      # there. See README §Build for the local-dev equivalent.
+      - uses: actions/checkout@v6
+        with:
+          repository: aster-cloud/aster-lang-core
+          path: aster-lang-core
+          token: ${{ secrets.CROSS_REPO_TOKEN || github.token }}
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '25'
+          cache: 'gradle'
+
       - uses: gradle/actions/setup-gradle@v4
+
+      - name: Publish aster-lang-core to Maven Local
+        working-directory: aster-lang-core
+        run: ./gradlew publishToMavenLocal -x test --no-daemon
+
       - name: Validate lexicon JSON
         run: ./gradlew validateLexicon --no-daemon
+
       - name: Run tests
         run: ./gradlew test --no-daemon
