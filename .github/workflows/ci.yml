@@ -39,7 +39,28 @@ jobs:
         working-directory: aster-lang-core
         run: ./gradlew publishToMavenLocal -x test --no-daemon
 
+      # The unmodified template lexicon (template-XX-XX.json) is full of
+      # TODO_TRANSLATE_* placeholders — that's by design, a contributor
+      # is supposed to translate them in their fork. validateLexicon
+      # would fail on this baseline file, which is correct behaviour for
+      # contributors but wrong for the template repo's own CI.
+      #
+      # Forks: once you rename the lexicon to <lang>-<region>.json and
+      # update build.gradle.kts:validateLexicon args, this guard
+      # automatically lifts and validateLexicon runs.
+      - name: Detect unmodified template
+        id: template_check
+        run: |
+          if [ -f src/main/resources/lexicons/template-XX-XX.json ] && \
+             grep -q 'TODO_TRANSLATE_' src/main/resources/lexicons/template-XX-XX.json; then
+            echo "is_template=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::This is the unmodified template scaffold; skipping validateLexicon. Forks should remove template-XX-XX.json after renaming."
+          else
+            echo "is_template=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Validate lexicon JSON
+        if: steps.template_check.outputs.is_template != 'true'
         run: ./gradlew validateLexicon --no-daemon
 
       - name: Run tests
