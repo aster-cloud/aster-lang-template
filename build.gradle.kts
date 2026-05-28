@@ -3,13 +3,15 @@
 // TODO[CONTRIBUTOR]:
 //   1. 改 group / artifactId 为你的语种 ID
 //   2. 改 publishing.repositories 为你的 maven 仓库（或保留 mavenLocal 用于开发）
+//   3. R21 (audit): 模板版本号与已发布的 sibling lexicons (en/de/zh) 保持
+//      一致, 避免 SNAPSHOT 浮动版本意外被纳入消费者构建.
 plugins {
     `java-library`
     `maven-publish`
 }
 
 group = "cloud.aster-lang"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
     toolchain {
