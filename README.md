@@ -57,19 +57,34 @@
 
 测试会用你的 lexicon 跑黄金 sample policy，期望与 en-US lexicon 输出相同的 Core IR。
 
-### 5. 提 PR（1 分钟）
+### 5. 提交收编申请（1 分钟）
 
-- 创建 PR 到 `aster-cloud/aster-lang-<lang>-<region>`（仓库由 Aster team 创建）
-- PR 描述用自动模板填充：lang / region / direction / vocabulary 列表 / 是否官方背书
-- Aster reviewer **24h** 内首次回复
+你的 fork 已经是一个**可独立运行的社区维护语言包**（SPI 自动发现，无需 Aster 介入即可
+本地/自有部署加载——见下文"技术细节 → SPI ABI 兼容性"）。如果你希望它被**官方收编**进
+[`aster-lang-locales`](https://github.com/aster-cloud/aster-lang-locales)（走"官方背书"路径）：
+
+- 在 [aster-lang-locales Discussions / Issues](https://github.com/aster-cloud/aster-lang-locales/issues)
+  发起收编申请，附上你 fork 的仓库链接
+- 申请用自动模板填充：lang / region / direction / vocabulary 列表 / `validateLexicon` 通过截图
+- Aster reviewer **24h** 内首次回复；准入流程见
+  [aster-lang-locales README 的"官方收编（Adoption）准入流程"](https://github.com/aster-cloud/aster-lang-locales#官方收编adoption准入流程)
+
+> 不想走官方收编也完全可以：保持"社区维护"路径，用你自己的 maven 坐标发布，
+> 在 [docs/community/lexicons](https://aster-lang.dev/community/lexicons) 登记即可被其他用户发现。
 
 ## 三条贡献路径
 
-| 路径 | 控制 | Aster 介入 | 适用 |
-|---|---|---|---|
-| **官方 lexicon** | Aster team 直接维护 | 100% | en/zh/de（核心市场） |
-| **官方背书 lexicon** | Community PR + Aster review + merge to aster-cloud org | Review + 安全审计 + maven 发布 | 主流语种（ja/fr/es/...） |
-| **社区维护 lexicon** | Community 自有 org + 自有 maven coord | 仅 docs/community/lexicons 收录 | 长尾语种 / 行业 dialect |
+| 路径 | 控制 | 落点 | Aster 介入 | 适用 |
+|---|---|---|---|---|
+| **官方 lexicon** | Aster team 直接维护 | [`aster-lang-locales`](https://github.com/aster-cloud/aster-lang-locales) 的一个 module | 100% | en/zh/de（核心市场） |
+| **官方背书 lexicon** | Community 开发 → Aster review → **晋升**为 `aster-lang-locales` 的新 module | 晋升后进 `aster-lang-locales`（晋升前留在你 fork 的模板 repo） | Review + 安全审计 + maven 发布 | 主流语种（ja/fr/es/...） |
+| **社区维护 lexicon** | Community 自有 org + 自有 maven coord | 你自己的 repo | 仅 [docs/community/lexicons](https://aster-lang.dev/community/lexicons) 收录 | 长尾语种 / 行业 dialect |
+
+> **关于"官方背书"的落点**：所有 Aster 官方维护的语言包都集中在单一仓库
+> [`aster-lang-locales`](https://github.com/aster-cloud/aster-lang-locales)（一语言一 module，不再一语言一 repo）。
+> 走"官方背书"路径的语言通过本模板自助开发 + 自测，评审通过后由 Aster team
+> **收编**为 `aster-lang-locales` 的新 module。收编准入流程见该仓库 README 的
+> "官方收编（Adoption）准入流程"一节。
 
 ## 贡献激励
 
