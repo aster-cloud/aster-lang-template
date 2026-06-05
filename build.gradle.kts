@@ -25,6 +25,11 @@ repositories {
 }
 
 dependencies {
+    // 故意硬编码版本，不使用共享 version catalog（aster-lang-platform，ADR 0012）。
+    // 本仓库是给外部贡献者 fork 的独立脚手架——引入 catalog 会让每个 fork 额外
+    // 依赖 aster-lang-platform，增加 forker 的搭建负担。catalog 的价值是集中
+    // first-party 仓库里散落的多个版本；这里只有一个依赖，字面量更清晰。
+    // 升级 core 版本时手动改这一行即可。
     implementation("cloud.aster-lang:aster-lang-core:0.0.1")
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
     testImplementation("org.assertj:assertj-core:3.27.3")
