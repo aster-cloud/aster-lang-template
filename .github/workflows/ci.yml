@@ -5,6 +5,12 @@ on:
     branches: [main]
   pull_request:
 
+# 同一 ref 上新 push 到来时取消尚在跑的过时 CI（PR 连续 push 常见）——省算力/排队。
+# 该仓 CI 无发布/部署副作用（release 是独立 workflow），故可直接 cancel 过时 run。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -14,13 +20,27 @@ jobs:
       # aster-lang-core is not (yet) published to a public Maven repo.
       # Lang-pack repos (en/zh/de) and this template fork resolve it from
       # ~/.m2 after `publishToMavenLocal`. Mirror the same pattern as
-      # aster-lang-en/.github/workflows/ci.yml: side-checkout core,
-      # publish locally, then build.
+      # aster-lang-locales/.github/workflows/ci.yml: side-checkout the
+      # shared version catalog (aster-lang-platform) + core, publish both
+      # locally, then build.
       #
       # External contributors forking this template will need either
       # CROSS_REPO_TOKEN (if the core repo is private) or to point this
       # at a public Maven Central coordinate once aster-lang-core lands
       # there. See README §Build for the local-dev equivalent.
+
+      # 共享版本目录（aster-lang-platform，ADR 0012）：core 的 settings.gradle 用
+      # `from("cloud.aster-lang:aster-lang-platform:<ver>")` 拉版本目录，在 settings
+      # 评估阶段解析——必须**先**把 platform publish 到 Maven Local，否则 core 的
+      # publishToMavenLocal 报 `Could not find cloud.aster-lang:aster-lang-platform`
+      # （template CI 此前缺这一步 = pre-existing 构建失败根因；core 引入版本目录后
+      # 此仓的跨仓 publish 序列未跟上）。
+      - uses: actions/checkout@v6
+        with:
+          repository: aster-cloud/aster-lang-platform
+          path: aster-lang-platform
+          token: ${{ secrets.CROSS_REPO_TOKEN || github.token }}
+
       - uses: actions/checkout@v6
         with:
           repository: aster-cloud/aster-lang-core
@@ -34,6 +54,11 @@ jobs:
           cache: 'gradle'
 
       - uses: gradle/actions/setup-gradle@v6
+
+      # 先 publish 版本目录（core settings 依赖它），再 publish core。
+      - name: Publish version catalog to Maven Local
+        working-directory: aster-lang-platform
+        run: ./gradlew publishToMavenLocal --no-daemon
 
       - name: Publish aster-lang-core to Maven Local
         working-directory: aster-lang-core
