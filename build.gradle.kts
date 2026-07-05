@@ -30,7 +30,13 @@ dependencies {
     // 依赖 aster-lang-platform，增加 forker 的搭建负担。catalog 的价值是集中
     // first-party 仓库里散落的多个版本；这里只有一个依赖，字面量更清晰。
     // 升级 core 版本时手动改这一行即可。
-    implementation("cloud.aster-lang:aster-lang-core:0.0.1")
+    //
+    // ★版本 = core 当前从 platform catalog 派生的制品版本（asterLang，见
+    // aster-lang-platform/build.gradle.kts）。core 迁到 catalog 派生版本后不再 publish
+    // 旧的 0.0.1，此处长期停留 0.0.1 → CI 的 `./gradlew test` 在 Maven Local 找不到
+    // aster-lang-core:0.0.1（=2026-06-05 起 template CI 变红的第二层根因；第一层是
+    // ci.yml 缺 platform publish）。对齐到 1.0.11。
+    implementation("cloud.aster-lang:aster-lang-core:1.0.11")
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
     testImplementation("org.assertj:assertj-core:3.27.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
