@@ -35,8 +35,10 @@ dependencies {
     // aster-lang-platform/build.gradle.kts）。core 迁到 catalog 派生版本后不再 publish
     // 旧的 0.0.1，此处长期停留 0.0.1 → CI 的 `./gradlew test` 在 Maven Local 找不到
     // aster-lang-core:0.0.1（=2026-06-05 起 template CI 变红的第二层根因；第一层是
-    // ci.yml 缺 platform publish）。对齐到 1.0.11。
-    implementation("cloud.aster-lang:aster-lang-core:1.0.11")
+    // ci.yml 缺 platform publish）。对齐到 core 当前 catalog 派生版本 1.0.14
+    // （1.0.11 从未发布到 Maven Central、CI 侧 checkout 的 core main 实际 publish 1.0.14，
+    //  旧 pin 1.0.11 → validate 的 :compileJava 解析不到）。
+    implementation("cloud.aster-lang:aster-lang-core:1.0.14")
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
     testImplementation("org.assertj:assertj-core:3.27.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
