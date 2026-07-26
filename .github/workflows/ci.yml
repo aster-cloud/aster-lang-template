@@ -11,6 +11,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 最小权限：本 workflow 仅 checkout 本仓与跨仓（回退 github.token 时需读取仓库内容）、
+# 构建、publishToMavenLocal（仅本地，无远程发布）、校验 lexicon、跑测试——不推 commit/
+# tag/release、不评论 PR、不推镜像、不上传 SARIF、无 OIDC 云登录，故只需 contents: read。
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
