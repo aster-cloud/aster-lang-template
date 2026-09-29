@@ -23,6 +23,22 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # CODEOWNERS 里解析不到的 owner（团队不存在 / 不可见 / 无 write 权限）会被 GitHub 静默
+      # 忽略整行——所有权规则失效却无人察觉，且由本模板建出的仓库会原样继承。这里主动查
+      # codeowners/errors，有任何解析错误就让 CI 变红，把问题暴露出来。
+      - name: Check CODEOWNERS resolves
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          errors="$(gh api "repos/${{ github.repository }}/codeowners/errors")"
+          count="$(jq '.errors | length' <<<"$errors")"
+          if [ "$count" -ne 0 ]; then
+            jq -r '.errors[] | "::error file=\(.path),line=\(.line)::\(.kind): \(.suggestion)"' <<<"$errors"
+            echo "CODEOWNERS 有 ${count} 处 owner 解析错误"
+            exit 1
+          fi
+          echo "CODEOWNERS 全部 owner 可解析"
+
       # aster-lang-core is not (yet) published to a public Maven repo.
       # Lang-pack repos (en/zh/de) and this template fork resolve it from
       # ~/.m2 after `publishToMavenLocal`. Mirror the same pattern as
