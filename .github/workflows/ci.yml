@@ -26,7 +26,10 @@ jobs:
       # CODEOWNERS 里解析不到的 owner（团队不存在 / 不可见 / 无 write 权限）会被 GitHub 静默
       # 忽略整行——所有权规则失效却无人察觉，且由本模板建出的仓库会原样继承。这里主动查
       # codeowners/errors，有任何解析错误就让 CI 变红，把问题暴露出来。
+      # 仅在 aster-cloud 组织自身的仓库运行：由本模板建出的下游仓库沿用同一 CODEOWNERS，
+      # 在其它组织下必然解析失败，不能让新仓开箱即红。
       - name: Check CODEOWNERS resolves
+        if: github.repository_owner == 'aster-cloud'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
