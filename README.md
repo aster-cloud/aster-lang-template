@@ -36,6 +36,8 @@
     否则 `ServiceLoader` 找不到你的插件
   - `providedLexiconIds()` 与 lexicon JSON 的 `meta.id` 必须一致，测试
     `providedIdsAreConsistentWithCreated` 会校验这一点
+  - `CODEOWNERS`：把 `@aster-cloud/lang-maintainers` 改成你自己的 GitHub 用户名或团队（或直接删除该文件）；
+    CI 里的 CODEOWNERS 解析断言只在 aster-cloud 组织内运行，不会让你的新仓变红
 
 ### 2. 翻译 lexicon JSON（10 分钟）
 
