@@ -24,21 +24,15 @@ repositories {
     mavenCentral()
 }
 
+// aster-lang-core 的版本不是字面量，而是由 aster-lang-platform 版本目录（ADR 0012）派生，
+// 随 core main 持续前进。本仓故意不引入该 catalog——它是给外部贡献者建仓用的独立脚手架，
+// 多一个 platform 依赖只会增加搭建负担。因此版本改由外部注入：CI 把 core 实际
+// publishToMavenLocal 的版本通过 -PasterLangCoreVersion 传进来，永远与 CI 侧一致；
+// 本地开发不传时用下面的回退值（须是本机 ~/.m2 或远程仓库里存在的版本）。
+val asterLangCoreVersion = providers.gradleProperty("asterLangCoreVersion").orElse("1.0.30")
+
 dependencies {
-    // 故意硬编码版本，不使用共享 version catalog（aster-lang-platform，ADR 0012）。
-    // 本仓库是给外部贡献者 fork 的独立脚手架——引入 catalog 会让每个 fork 额外
-    // 依赖 aster-lang-platform，增加 forker 的搭建负担。catalog 的价值是集中
-    // first-party 仓库里散落的多个版本；这里只有一个依赖，字面量更清晰。
-    // 升级 core 版本时手动改这一行即可。
-    //
-    // ★版本 = core 当前从 platform catalog 派生的制品版本（asterLang，见
-    // aster-lang-platform/build.gradle.kts）。core 迁到 catalog 派生版本后不再 publish
-    // 旧的 0.0.1，此处长期停留 0.0.1 → CI 的 `./gradlew test` 在 Maven Local 找不到
-    // aster-lang-core:0.0.1（=2026-06-05 起 template CI 变红的第二层根因；第一层是
-    // ci.yml 缺 platform publish）。对齐到 core 当前 catalog 派生版本 1.0.14
-    // （1.0.11 从未发布到 Maven Central、CI 侧 checkout 的 core main 实际 publish 1.0.14，
-    //  旧 pin 1.0.11 → validate 的 :compileJava 解析不到）。
-    implementation("cloud.aster-lang:aster-lang-core:1.0.14")
+    implementation("cloud.aster-lang:aster-lang-core:${asterLangCoreVersion.get()}")
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
     testImplementation("org.assertj:assertj-core:3.27.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

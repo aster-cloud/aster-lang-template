@@ -70,6 +70,21 @@ jobs:
         working-directory: aster-lang-core
         run: ./gradlew publishToMavenLocal -x test --no-daemon
 
+      # core 的版本由 platform 版本目录派生、随 core main 前进，本仓若硬钉字面量必然再次漂移
+      # （钉 1.0.14 时 CI 实际 publish 的是 1.0.30 → :compileJava 解析不到）。这里读出刚才
+      # 真正 publish 的版本，交给下面的 gradle 步骤用 -PasterLangCoreVersion 覆盖 build 内回退值。
+      - name: Resolve published aster-lang-core version
+        id: core_version
+        working-directory: aster-lang-core
+        run: |
+          version="$(./gradlew -q properties --no-daemon | awk '/^version:/ { print $2 }')"
+          if [ -z "$version" ]; then
+            echo "::error::无法从 aster-lang-core 读取 version"
+            exit 1
+          fi
+          echo "aster-lang-core published version: $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
       # The unmodified template lexicon (template-XX-XX.json) is full of
       # TODO_TRANSLATE_* placeholders — that's by design, a contributor
       # is supposed to translate them in their fork. validateLexicon
@@ -92,7 +107,7 @@ jobs:
 
       - name: Validate lexicon JSON
         if: steps.template_check.outputs.is_template != 'true'
-        run: ./gradlew validateLexicon --no-daemon
+        run: ./gradlew validateLexicon --no-daemon -PasterLangCoreVersion=${{ steps.core_version.outputs.version }}
 
       - name: Run tests
-        run: ./gradlew test --no-daemon
+        run: ./gradlew test --no-daemon -PasterLangCoreVersion=${{ steps.core_version.outputs.version }}
