@@ -1,5 +1,5 @@
 name: New lexicon request
-description: Propose a new locale before forking the template
+description: Propose a new locale before creating your repo from the template
 title: "[lexicon] Add support for <locale id>"
 labels: ["lexicon-request"]
 body:
@@ -54,4 +54,4 @@ body:
       options:
         - label: I have read CONTRIBUTING.md
         - label: I have a native-speaker reviewer lined up (separate from the translator)
-        - label: I will use `gh repo fork --template` against this repository, not a bare clone
+        - label: I will create my repo with `gh repo create <name> --template aster-cloud/aster-lang-template`, not a bare clone
