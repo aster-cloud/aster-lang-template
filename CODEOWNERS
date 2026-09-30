@@ -1,12 +1,16 @@
 #  Default owners for the lexicon template — review fork PRs that add
 #  new locales or update the canonical scaffold.
+#
+#  owner 必须是 GitHub 能解析的用户或团队（不存在的团队会被整行静默忽略，CI 的
+#  CODEOWNERS 断言会报错）。@aster-cloud/lang-maintainers 团队尚未创建，先指向
+#  唯一维护者；团队建立后改回团队名即可。由本模板建出的仓库请改成自己的 handle。
 
-*                       @aster-cloud/lang-maintainers
+*                       @jet-pang
 
 # SPI surface — changes here ripple into every locale repo
-/src/main/java/         @aster-cloud/lang-maintainers
-/src/main/resources/META-INF/services/   @aster-cloud/lang-maintainers
+/src/main/java/         @jet-pang
+/src/main/resources/META-INF/services/   @jet-pang
 
 # Build / CI
-/build.gradle.kts                @aster-cloud/lang-maintainers
-/.github/workflows/              @aster-cloud/lang-maintainers
+/build.gradle.kts                @jet-pang
+/.github/workflows/              @jet-pang

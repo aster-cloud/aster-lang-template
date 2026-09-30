@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  *   - {@link LexiconPlugin}: lexical/keyword + overlay resources
  *   - {@link VocabularyPlugin}: domain vocabularies (industry-specific terms)
  *
- * Reference impl: aster-lang-en/src/main/java/aster/lang/en/EnUsPlugin.java
+ * Reference impl: aster-lang-locales/locales/en/src/main/java/aster/lang/en/EnUsPlugin.java
  */
 public final class TemplatePlugin implements LexiconPlugin, VocabularyPlugin {
 
