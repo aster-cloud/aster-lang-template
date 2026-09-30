@@ -33,7 +33,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          errors="$(gh api "repos/${{ github.repository }}/codeowners/errors")"
+          # 必须带 ref：不带时该端点校验的是默认分支的 CODEOWNERS，而不是本次 PR/推送的提交，
+          # 会让修好 CODEOWNERS 的 PR 仍然红、改坏 CODEOWNERS 的 PR 反而绿。
+          ref="${{ github.event.pull_request.head.sha || github.sha }}"
+          errors="$(gh api "repos/${{ github.repository }}/codeowners/errors?ref=${ref}")"
           count="$(jq '.errors | length' <<<"$errors")"
           if [ "$count" -ne 0 ]; then
             jq -r '.errors[] | "::error file=\(.path),line=\(.line)::\(.kind): \(.suggestion)"' <<<"$errors"
